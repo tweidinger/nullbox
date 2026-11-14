@@ -8,6 +8,7 @@
 //! - storage: [`repo::TicketRepository`]
 //! - settings: [`config::Config`]
 
+
 pub mod config;
 pub mod db;
 pub mod dto;
@@ -18,8 +19,11 @@ pub mod policy;
 pub mod repo;
 pub mod service;
 pub mod token;
+pub mod admin_token;
 
 use std::sync::Arc;
+
+use admin_token::AdminTokenProvider;
 
 pub use config::Config;
 pub use error::ApiError;
@@ -29,12 +33,22 @@ pub use error::ApiError;
 pub struct AppState {
     pub tickets: Arc<service::TicketService>,
     pub config: Arc<Config>,
+    pub admin_token: Arc<AdminTokenProvider>,
 }
 
 impl AppState {
     pub fn new(pool: sqlx::SqlitePool, config: Config) -> Self {
         let repo = Arc::new(repo::SqliteTicketRepository::new(pool));
         let events = Arc::new(events::TracingEventSink);
-        Self { tickets: Arc::new(service::TicketService::new(repo, events)), config: Arc::new(config) }
+
+        let admin_token = Arc::new(
+            AdminTokenProvider::new(config.admin_token.clone())
+        );
+
+        Self {
+            tickets: Arc::new(service::TicketService::new(repo, events)),
+            config: Arc::new(config),
+            admin_token,
+        }
     }
 }
