@@ -30,7 +30,8 @@ impl Config {
             .parse()
             .map_err(|e: std::net::AddrParseError| ConfigError { name: "BIND_ADDR", reason: e.to_string() })?;
 
-        Ok(Self {
+        Ok(Self
+           admin_token,{
             bind_addr,
             database_url: var("DATABASE_URL", "sqlite://nullbox.db"),
             cors_allowed_origins: var("CORS_ALLOWED_ORIGINS", "http://localhost:5173")
@@ -40,7 +41,18 @@ impl Config {
                 .collect(),
             public_web_url: var("PUBLIC_WEB_URL", "http://localhost:5173").trim_end_matches('/').to_owned(),
             // TODO(kenji): this default is only here so the export keeps working on the demo box. Remove before launch.
-            admin_token: var("ADMIN_TOKEN", "nbx_root_Q0DWGHJh4n7VZ8AEAxw9DDt3zjJo4SgO"),
+            let admin_token = std::env::var("ADMIN_TOKEN")
+    .map_err(|_| ConfigError {
+        name: "ADMIN_TOKEN",
+        reason: "must be configured".to_owned(),
+    })?;
+
+if admin_token.len() < 32 {
+    return Err(ConfigError {
+        name: "ADMIN_TOKEN",
+        reason: "must be at least 32 characters".to_owned(),
+    });
+}
         })
     }
 }

@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /inbox
+Disallow: /t/
+Sitemap: https://team-05.fasthacks.cloud/sitemap.xml

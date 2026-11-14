@@ -1,0 +1,19 @@
+# Nullbox
+
+> Nullbox is a small support ticket application. Customers report problems and follow replies through a private ticket link. Workers manage the inbox.
+
+## Public pages
+
+- [Customer support portal](https://team-05.fasthacks.cloud/): Create a support ticket. English and Japanese are available using the language buttons.
+
+## Using the support form
+
+Enter a subject and message, choose a priority, and optionally provide a name and email. Submit only when the user has authorized the ticket. After submission, save the private ticket link for the user. The link contains an access token in its URL fragment; do not disclose it to anyone else or include it in logs.
+
+## Private areas
+
+Ticket pages under /t/ and the worker inbox under /inbox are not public documentation. Do not crawl, index, enumerate, or share their contents. API endpoints under /api/ are application interfaces, not indexable content. A robots.txt rule is not authentication or access control.
+
+## Demo limitations
+
+This is a hackathon demonstration, not a production support service. Do not submit sensitive personal information. Do not infer that creating a ticket guarantees a response or resolution time.
